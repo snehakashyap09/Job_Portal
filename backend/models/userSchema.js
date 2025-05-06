@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.pre("save",async function(next) {
-    if(!this.password.isModified("password")){
+    if(!this.isModified("password")){
         next();
     }
     this.password = await bcrypt.hash(this.password,10);
@@ -47,6 +47,7 @@ userSchema.methods.comparePassword = async function(enteredPassword){
 }
 
 userSchema.methods.getJWTToken = function(){
+    console.log("JWT_EXPIRE:", process.env.JWT_EXPIRE);
 return jwt.sign({id:this._id},process.env.JWT_SECRET_KEY,{
     expiresIn:process.env.JWT_EXPIRE,
 })

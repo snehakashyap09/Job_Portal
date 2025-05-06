@@ -1,11 +1,18 @@
 import express from "express"
-const app = express();
-import { dbConnect } from "./database/dbConnection.js";
 import dotenv from "dotenv"
+
+import { dbConnect } from "./database/dbConnection.js";
+import userRouter from "./routes/userRoutes.js"
+import cookieParser from "cookie-parser";
+import { errorMiddleware } from "./middlewares/error.js";
 dotenv.config()
 dbConnect();
+const app = express();
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
-app.listen(5000,()=>{
-    console.log("server started");
-    
-})
+app.use("/api/v1/user",userRouter);
+
+app.use(errorMiddleware);
+export default app;
