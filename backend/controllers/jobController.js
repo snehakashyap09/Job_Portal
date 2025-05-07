@@ -1,6 +1,6 @@
-import { Job } from "../models/jobSchema";
-import ErrorHandler from "../middlewares/error";
-import { catchAsyncErrors } from "../middlewares/catchAsyncError";
+import { Job } from "../models/jobSchema.js";
+import ErrorHandler from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 
 export const getAllJobs = catchAsyncErrors(async(req,res,next)=>{
     const jobs = await Job.find({expired:false});
@@ -35,6 +35,11 @@ export const postJob = catchAsyncErrors(async(req,res,next)=>{
     if((!salaryFrom || !salaryTo) && !fixedSalary){
         return next(new ErrorHandler("Please either provide fixed salary or ranged salary.",400))
     }
+if(fixedSalary && salaryFrom && salaryTo){
+    return next(
+        new ErrorHandler("Cannot Enter Fixed and Ranged Salary together.", 400)
+      );
+}
 
     const postedBy = req.user._id;
     const job = await Job.create({
@@ -52,7 +57,8 @@ export const postJob = catchAsyncErrors(async(req,res,next)=>{
 
     return res.status(200).json({
         success:true,
-        message: "Job Posted successfully"
+        message: "Job Posted successfully",
+        job
     })
 })
 
@@ -101,6 +107,9 @@ export const deleteJob = catchAsyncErrors(async(req,res,next)=>{
 
     const {id} = req.params;
     const job = await Job.findById(id);
+    if (!job) {
+        return next(new ErrorHandler("OOPS! Job not found.", 404));
+      }
     await job.deleteOne();
     res.status(200).json({
         success:true,

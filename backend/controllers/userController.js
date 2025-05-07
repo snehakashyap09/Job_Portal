@@ -67,3 +67,4 @@ export const getUser = catchAsyncErrors((req,res,next)=>{
         user
     })
 })
+
