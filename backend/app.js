@@ -14,7 +14,7 @@ config({ path: "./config/config.env" });
 
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL,"https://job-search-fullstack.netlify.app"],
+    origin: [process.env.FRONTEND_URL,"https://job-search-webapp.netlify.app"],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
