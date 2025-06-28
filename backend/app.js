@@ -7,12 +7,10 @@ import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
-import dbConnection  from "./database/dbConnection.js";
 
 const app = express();
 config({ path: "./config/config.env" });
 
- dbConnection();
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL,"https://job-search-webapp.netlify.app"],
