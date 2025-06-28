@@ -7,8 +7,11 @@ import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import dbConnection  from "./database/dbConnection.js";
 
 const app = express();
+  dbConnection();
+
 config({ path: "./config/config.env" });
 
 app.use(
