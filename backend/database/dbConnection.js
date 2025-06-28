@@ -5,7 +5,8 @@ dotenv.config()
 //Database connection here!
  const dbConnection  = ()=>{
     mongoose.connect(process.env.MONGODB_URI,{
-       dbName: "Job_Portal"
+        useNewUrlParser: true,
+      useUnifiedTopology: true,
 
     }).then(()=>{ //agar connect ho jaye toh!
        console.log("MongoDB Connected Sucessfully !")

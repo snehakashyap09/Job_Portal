@@ -12,6 +12,8 @@ import fileUpload from "express-fileupload";
 const app = express();
 config({ path: "./config/config.env" });
 
+dbConnection();
+
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL,"https://job-search-webapp.netlify.app"],
@@ -41,7 +43,6 @@ app.get('/',(req,res)=>{
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
-dbConnection();
 
 app.use(errorMiddleware);
 export default app;
