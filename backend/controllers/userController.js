@@ -19,6 +19,8 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     password,
     role,
   });
+  console.log("added");
+  
   sendToken(user, 201, res, "User Registered Sucessfully !");
 });
 
@@ -49,6 +51,9 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
     .cookie("token", "", {
       httpOnly: true,
       expires: new Date(Date.now()),
+     secure: true,
+      sameSite: "None",
+
     })
     .json({
       success: true,

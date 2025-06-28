@@ -1,5 +1,4 @@
 import express from "express";
-import dbConnection  from "./database/dbConnection.js";
 import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import applicationRouter from "./routes/applicationRoutes.js";
@@ -8,12 +7,12 @@ import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import dbConnection  from "./database/dbConnection.js";
 
 const app = express();
 config({ path: "./config/config.env" });
 
-dbConnection();
-
+ dbConnection();
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL,"https://job-search-webapp.netlify.app"],
