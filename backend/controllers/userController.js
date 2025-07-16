@@ -1,8 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
-import { sendToken } from "../utils/jwtToken.js";
-
+import { generateToken } from "../utils/generateToken.js";
 export const register = catchAsyncErrors(async (req, res, next) => {
   const { name, email, phone, password, role } = req.body;
   if (!name || !email || !phone || !password || !role) {
@@ -12,18 +11,16 @@ export const register = catchAsyncErrors(async (req, res, next) => {
   if (isEmail) {
     return next(new ErrorHandler("Email already registered !"));
   }
-  const user = await User.create({
-    name,
-    email,
-    phone,
-    password,
-    role,
-  });
-  console.log("added");
-  
-  sendToken(user, 201, res, "User Registered Sucessfully !");
-});
+ 
+   const user = await User.create({ name, email, phone, password, role });
 
+  generateToken(res, user._id);
+
+  res.status(201).json({
+    success: true,
+    message: "User registered successfully",
+  })
+})
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password, role } = req.body;
   if (!email || !password || !role) {
@@ -42,22 +39,19 @@ export const login = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler(`User with provided email and ${role} not found !`, 404)
     );
   }
-  sendToken(user, 201, res, "User Logged In Sucessfully !");
+  generateToken(res,user._id)
 });
 
-export const logout = catchAsyncErrors(async (req, res, next) => {
-  res
-    .status(201)
-    .cookie("token", "", {
-      httpOnly: true,
-      expires: new Date(Date.now()),
-    
+export const logout = (req,res)=>{
+    res.cookie('jwt','',{
+        httpOnly:true,
+        expires:new Date(0),
     })
-    .json({
-      success: true,
-      message: "Logged Out Successfully !",
-    });
-});
+
+    res.status(200).json({
+        message: "logged out"
+    })
+}
 
 
 export const getUser = catchAsyncErrors((req, res, next) => {
